@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+
+    id 'idea'
+    id 'eclipse'
+}
+
+defaultTasks 'clean'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'uk.jamierocks'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}
