@@ -16,6 +16,9 @@ public class Configuration {
 
     private String name;
     private String motd;
+    private boolean isPublic;
+    private int port;
+    private int maxPlayers;
 
     public String getName() {
         return this.name;
@@ -33,10 +36,37 @@ public class Configuration {
         this.motd = motd;
     }
 
+    public boolean isPublic() {
+        return this.isPublic;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public int getPort() {
+        return this.port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public int getMaxPlayers() {
+        return this.maxPlayers;
+    }
+
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
+    }
+
     public boolean save() {
         Properties properties = new Properties();
         properties.setProperty("name", this.name);
         properties.setProperty("motd", this.motd);
+        properties.setProperty("public", "" + this.isPublic);
+        properties.setProperty("port", "" + this.port);
+        properties.setProperty("max-players", "" + this.maxPlayers);
 
         try {
             properties.store(new FileOutputStream(CONFIG_FILE), "ClassicServer properties");
@@ -59,6 +89,9 @@ public class Configuration {
             Configuration config = new Configuration();
             config.setName(properties.getProperty("name"));
             config.setMotd(properties.getProperty("motd"));
+            config.setPublic(Boolean.parseBoolean(properties.getProperty("public")));
+            config.setPort(Integer.parseInt(properties.getProperty("port")));
+            config.setMaxPlayers(Integer.parseInt(properties.getProperty("max-players")));
 
             return Optional.of(config);
         } catch (IOException e) {

@@ -8,6 +8,7 @@ import org.spacehq.packetlib.packet.DefaultPacketHeader;
 import org.spacehq.packetlib.packet.PacketHeader;
 import org.spacehq.packetlib.packet.PacketProtocol;
 import uk.jamierocks.classicserver.packet.client.ClientChatPacket;
+import uk.jamierocks.classicserver.packet.client.ClientIdentificationPacket;
 import uk.jamierocks.classicserver.packet.server.ServerLevelInitialisePacket;
 import uk.jamierocks.classicserver.packet.server.ServerPingPacket;
 import uk.jamierocks.classicserver.packet.server.ServerIdentificationPacket;
@@ -46,6 +47,7 @@ public class ClassicProtocol extends PacketProtocol {
 
     @Override
     public void newServerSession(Server server, Session session) {
+        this.registerIncoming(0, ClientIdentificationPacket.class);
         this.registerIncoming(13, ClientChatPacket.class);
 
         this.registerOutgoing(0, ServerIdentificationPacket.class);
