@@ -15,9 +15,13 @@ version = '1.0.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://repo.spacehq.org/content/repositories/releases/'
+    }
 }
 
 dependencies {
+    compile 'org.spacehq:packetlib:1.0'
 }
 
 task wrapper(type: Wrapper) {
