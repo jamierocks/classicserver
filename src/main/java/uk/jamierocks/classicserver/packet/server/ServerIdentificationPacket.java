@@ -31,6 +31,18 @@ public class ServerIdentificationPacket implements Packet {
         return this.protocolVersion;
     }
 
+    public String getServerName() {
+        return this.serverName;
+    }
+
+    public String getServerMOTD() {
+        return this.serverMOTD;
+    }
+
+    public UserType getUserType() {
+        return this.userType;
+    }
+
     @Override
     public void read(NetInput netInput) throws IOException {
         this.protocolVersion = netInput.readInt();
