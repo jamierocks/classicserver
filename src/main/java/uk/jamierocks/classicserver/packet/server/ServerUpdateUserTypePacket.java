@@ -10,14 +10,14 @@ import java.io.IOException;
 /**
  * The packet for updating the user type.
  */
-public class UpdateUserTypePacket implements Packet {
+public class ServerUpdateUserTypePacket implements Packet {
 
     private UserType userType;
 
-    private UpdateUserTypePacket() {
+    private ServerUpdateUserTypePacket() {
     }
 
-    public UpdateUserTypePacket(UserType userType) {
+    public ServerUpdateUserTypePacket(UserType userType) {
         this.userType = userType;
     }
 

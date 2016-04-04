@@ -1,4 +1,4 @@
-package uk.jamierocks.classicserver.packet.client;
+package uk.jamierocks.classicserver.packet.server;
 
 import org.spacehq.packetlib.io.NetInput;
 import org.spacehq.packetlib.io.NetOutput;
@@ -7,19 +7,23 @@ import org.spacehq.packetlib.packet.Packet;
 import java.io.IOException;
 
 /**
- * The message packet.
+ * The server message packet.
  */
-public class ClientMessagePacket implements Packet {
+public class ServerChatPacket implements Packet {
 
-    private int unused; // This is always 0xFF (255)
+    private int playerId;
     private String message;
 
-    private ClientMessagePacket() {
+    private ServerChatPacket() {
     }
 
-    public ClientMessagePacket(String message) {
-        this.unused = 255;
+    public ServerChatPacket(int playerId, String message) {
+        this.playerId = playerId;
         this.message = message;
+    }
+
+    public int getPlayerId() {
+        return this.playerId;
     }
 
     public String getMessage() {
@@ -28,13 +32,13 @@ public class ClientMessagePacket implements Packet {
 
     @Override
     public void read(NetInput netInput) throws IOException {
-        this.unused = netInput.readInt();
+        this.playerId = netInput.readInt();
         this.message = netInput.readString();
     }
 
     @Override
     public void write(NetOutput netOutput) throws IOException {
-        netOutput.writeInt(this.unused);
+        netOutput.writeInt(this.playerId);
         netOutput.writeString(this.message);
     }
 

@@ -9,9 +9,9 @@ import java.io.IOException;
 /**
  * The level initialise packet.
  */
-public class LevelInitialisePacket implements Packet {
+public class ServerLevelInitialisePacket implements Packet {
 
-    public LevelInitialisePacket() {
+    public ServerLevelInitialisePacket() {
     }
 
     @Override

@@ -9,9 +9,9 @@ import java.io.IOException;
 /**
  * The 'ping' packet.
  */
-public class PingPacket implements Packet {
+public class ServerPingPacket implements Packet {
 
-    public PingPacket() {
+    public ServerPingPacket() {
     }
 
     @Override
