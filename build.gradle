@@ -22,6 +22,7 @@ repositories {
 
 dependencies {
     compile 'org.spacehq:packetlib:1.0'
+    compile 'org.slf4j:slf4j-api:1.7.20'
 }
 
 task wrapper(type: Wrapper) {
