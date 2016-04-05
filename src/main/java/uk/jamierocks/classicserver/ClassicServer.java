@@ -1,10 +1,10 @@
 package uk.jamierocks.classicserver;
 
-import com.flowpowered.math.vector.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spacehq.packetlib.Server;
 import org.spacehq.packetlib.event.server.ServerAdapter;
+import org.spacehq.packetlib.event.server.ServerClosingEvent;
 import org.spacehq.packetlib.event.server.SessionAddedEvent;
 import org.spacehq.packetlib.event.session.PacketReceivedEvent;
 import org.spacehq.packetlib.event.session.SessionAdapter;
@@ -29,6 +29,7 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
 
     public static Logger LOGGER = LoggerFactory.getLogger("ClassicServer");
 
+    private Heartbeat heartbeat;
     private Configuration config;
     private List<String> operators;
     private List<Player> players = new ArrayList<>();
@@ -38,11 +39,13 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
         Optional<Configuration> configuration = Configuration.load();
         if (configuration.isPresent()) {
             this.config = configuration.get();
+        } else {
+            this.config = new Configuration();
         }
 
         this.operators = Operators.getOperators();
 
-        Server server = new Server("127.0.0.1", 25565, ClassicProtocol.class, new TcpSessionFactory());
+        Server server = new Server("192.168.1.67", getPort(), ClassicProtocol.class, new TcpSessionFactory());
 
         server.addListener(new ServerAdapter() {
             @Override
@@ -55,7 +58,6 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
 
                             Player player = new Player(atomicInt.getAndIncrement(),
                                     identificationPacket.getUsername(),
-                                    new Vector3d(0, 0, 0),
                                     event.getSession());
                             players.add(player);
 
@@ -67,11 +69,28 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
                                             getName(),
                                             getMOTD(),
                                             userType));
+
+                            LOGGER.info(player.getName() + " has joined.");
                         }
                     }
                 });
             }
+
+            @Override
+            public void serverClosing(ServerClosingEvent event) {
+                heartbeat.stopBeating();
+                heartbeat = null;
+            }
         });
+
+        server.bind();
+
+        this.heartbeat = new Heartbeat(this);
+        new Thread(this.heartbeat, "HeartbeatThread").start();
+    }
+
+    public List<Player> getPlayers() {
+        return this.players;
     }
 
     @Override

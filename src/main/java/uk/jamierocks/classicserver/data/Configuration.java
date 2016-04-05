@@ -14,11 +14,11 @@ public class Configuration {
 
     public static final File CONFIG_FILE = new File("server.properties");
 
-    private String name;
-    private String motd;
-    private boolean isPublic;
-    private int port;
-    private int maxPlayers;
+    private String name = "Powered by ClassicServer";
+    private String motd = "Just another Classic Server";
+    private boolean isPublic = true;
+    private int port = 25565;
+    private int maxPlayers = 10;
 
     public String getName() {
         return this.name;

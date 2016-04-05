@@ -23,7 +23,9 @@ repositories {
 dependencies {
     compile 'org.spacehq:packetlib:1.0'
     compile 'org.slf4j:slf4j-api:1.7.20'
+    compile 'org.slf4j:slf4j-jdk14:1.7.12'
     compile 'com.flowpowered:flow-math:1.0.1'
+    compile 'com.flowpowered:flow-nbt:1.0.0'
 }
 
 task wrapper(type: Wrapper) {
