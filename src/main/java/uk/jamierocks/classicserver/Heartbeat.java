@@ -39,7 +39,12 @@ public class Heartbeat implements Runnable {
             urlBuilder.append("public=").append(this.server.isPublic()).append("&");
             urlBuilder.append("version=").append(this.server.getProtocolVersion()).append("&");
             urlBuilder.append("salt=").append("thisisarandomsalt").append("&");
-            urlBuilder.append("users=").append(this.server.getPlayerCount());
+            urlBuilder.append("users=").append(this.server.getPlayerCount()).append("&");
+            try {
+                urlBuilder.append("software=" + URLEncoder.encode("jamierocks' clasicserver", "utf-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(urlBuilder.toString())
                     .openStream()))) {

@@ -45,7 +45,7 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
 
         this.operators = Operators.getOperators();
 
-        Server server = new Server("192.168.1.67", getPort(), ClassicProtocol.class, new TcpSessionFactory());
+        Server server = new Server("192.168.1.67", this.getPort(), ClassicProtocol.class, new TcpSessionFactory());
 
         server.addListener(new ServerAdapter() {
             @Override
@@ -69,6 +69,7 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
                                             getName(),
                                             getMOTD(),
                                             userType));
+
 
                             LOGGER.info(player.getName() + " has joined.");
                         }

@@ -4,15 +4,14 @@ import org.spacehq.packetlib.Client;
 import org.spacehq.packetlib.Server;
 import org.spacehq.packetlib.Session;
 import org.spacehq.packetlib.crypt.PacketEncryption;
-import org.spacehq.packetlib.packet.DefaultPacketHeader;
 import org.spacehq.packetlib.packet.PacketHeader;
 import org.spacehq.packetlib.packet.PacketProtocol;
 import uk.jamierocks.classicserver.packet.client.ClientChatPacket;
 import uk.jamierocks.classicserver.packet.client.ClientIdentificationPacket;
+import uk.jamierocks.classicserver.packet.server.ServerChatPacket;
+import uk.jamierocks.classicserver.packet.server.ServerIdentificationPacket;
 import uk.jamierocks.classicserver.packet.server.ServerLevelInitialisePacket;
 import uk.jamierocks.classicserver.packet.server.ServerPingPacket;
-import uk.jamierocks.classicserver.packet.server.ServerIdentificationPacket;
-import uk.jamierocks.classicserver.packet.server.ServerChatPacket;
 import uk.jamierocks.classicserver.packet.server.ServerUpdateUserTypePacket;
 
 /**
@@ -20,9 +19,9 @@ import uk.jamierocks.classicserver.packet.server.ServerUpdateUserTypePacket;
  */
 public class ClassicProtocol extends PacketProtocol {
 
-    private PacketHeader header = new DefaultPacketHeader();
+    private PacketHeader header = new ClassicPacketHeader();
 
-    public ClassicProtocol() {
+    private ClassicProtocol() {
     }
 
     @Override
@@ -42,7 +41,14 @@ public class ClassicProtocol extends PacketProtocol {
 
     @Override
     public void newClientSession(Client client, Session session) {
+        this.registerOutgoing(0, ClientIdentificationPacket.class);
+        this.registerOutgoing(13, ClientChatPacket.class);
 
+        this.registerIncoming(0, ServerIdentificationPacket.class);
+        this.registerIncoming(1, ServerPingPacket.class);
+        this.registerIncoming(2, ServerLevelInitialisePacket.class);
+        this.registerIncoming(13, ServerChatPacket.class);
+        this.registerIncoming(15, ServerUpdateUserTypePacket.class);
     }
 
     @Override
