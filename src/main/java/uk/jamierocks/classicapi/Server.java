@@ -7,6 +7,8 @@ public interface Server {
 
     String getName();
 
+    String getMOTD();
+
     int getPort();
 
     int getPlayerCount();

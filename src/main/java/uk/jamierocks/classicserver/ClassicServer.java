@@ -11,8 +11,10 @@ import org.spacehq.packetlib.event.session.SessionAdapter;
 import org.spacehq.packetlib.tcp.TcpSessionFactory;
 import uk.jamierocks.classicserver.data.Configuration;
 import uk.jamierocks.classicserver.data.Operators;
+import uk.jamierocks.classicserver.data.UserType;
 import uk.jamierocks.classicserver.packet.ClassicProtocol;
 import uk.jamierocks.classicserver.packet.client.ClientIdentificationPacket;
+import uk.jamierocks.classicserver.packet.server.ServerIdentificationPacket;
 import uk.jamierocks.classicserver.player.Player;
 
 import java.util.ArrayList;
@@ -50,10 +52,21 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
                     public void packetReceived(PacketReceivedEvent event) {
                         if (event.getPacket() instanceof ClientIdentificationPacket) {
                             ClientIdentificationPacket identificationPacket = event.getPacket();
-                            players.add(new Player(atomicInt.getAndIncrement(),
+
+                            Player player = new Player(atomicInt.getAndIncrement(),
                                     identificationPacket.getUsername(),
                                     new Vector3d(0, 0, 0),
-                                    event.getSession()));
+                                    event.getSession());
+                            players.add(player);
+
+                            UserType userType = operators.contains(player.getName()) ?
+                                    UserType.OPERATOR : UserType.NORMAL;
+
+                            event.getSession().send(
+                                    new ServerIdentificationPacket(getProtocolVersion(),
+                                            getName(),
+                                            getMOTD(),
+                                            userType));
                         }
                     }
                 });
@@ -64,6 +77,11 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
     @Override
     public String getName() {
         return this.config.getName();
+    }
+
+    @Override
+    public String getMOTD() {
+        return this.config.getMotd();
     }
 
     @Override
