@@ -18,6 +18,9 @@ repositories {
     maven {
         url 'https://repo.spacehq.org/content/repositories/releases/'
     }
+    maven {
+        url 'http://repo.lexteam.xyz/repository/public/'
+    }
 }
 
 dependencies {
@@ -26,6 +29,7 @@ dependencies {
     compile 'org.slf4j:slf4j-jdk14:1.7.12'
     compile 'com.flowpowered:flow-math:1.0.1'
     compile 'com.flowpowered:flow-nbt:1.0.0'
+    compile 'xyz.lexteam:eventbus:1.4'
 }
 
 task wrapper(type: Wrapper) {

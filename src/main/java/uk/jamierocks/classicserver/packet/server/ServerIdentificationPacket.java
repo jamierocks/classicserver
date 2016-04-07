@@ -3,6 +3,7 @@ package uk.jamierocks.classicserver.packet.server;
 import org.spacehq.packetlib.io.NetInput;
 import org.spacehq.packetlib.io.NetOutput;
 import org.spacehq.packetlib.packet.Packet;
+import uk.jamierocks.classicapi.network.status.ServerIdentificationResponse;
 import uk.jamierocks.classicserver.data.UserType;
 
 import java.io.IOException;
@@ -25,6 +26,13 @@ public class ServerIdentificationPacket implements Packet {
         this.serverName = serverName;
         this.serverMOTD = serverMOTD;
         this.userType = userType;
+    }
+
+    public ServerIdentificationPacket(ServerIdentificationResponse statusResponse) {
+        this(statusResponse.getProtocolVersion(),
+                statusResponse.getName(),
+                statusResponse.getDescription(),
+                statusResponse.getUserType());
     }
 
     public int getProtocolVersion() {

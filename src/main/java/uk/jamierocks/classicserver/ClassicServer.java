@@ -9,6 +9,8 @@ import org.spacehq.packetlib.event.server.SessionAddedEvent;
 import org.spacehq.packetlib.event.session.PacketReceivedEvent;
 import org.spacehq.packetlib.event.session.SessionAdapter;
 import org.spacehq.packetlib.tcp.TcpSessionFactory;
+import uk.jamierocks.classicapi.event.server.ServerIdentificationEvent;
+import uk.jamierocks.classicapi.network.status.ServerIdentificationResponse;
 import uk.jamierocks.classicserver.data.Configuration;
 import uk.jamierocks.classicserver.data.Operators;
 import uk.jamierocks.classicserver.data.UserType;
@@ -25,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * The classicserver.
  */
-public class ClassicServer implements uk.jamierocks.classicapi.Server {
+public class ClassicServer extends ServerAdapter implements uk.jamierocks.classicapi.Server {
 
     public static Logger LOGGER = LoggerFactory.getLogger("ClassicServer");
 
@@ -46,51 +48,65 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
         this.operators = Operators.getOperators();
 
         Server server = new Server("192.168.1.67", this.getPort(), ClassicProtocol.class, new TcpSessionFactory());
-
-        server.addListener(new ServerAdapter() {
-            @Override
-            public void sessionAdded(SessionAddedEvent event) {
-                event.getSession().addListener(new SessionAdapter() {
-                    @Override
-                    public void packetReceived(PacketReceivedEvent event) {
-                        if (event.getPacket() instanceof ClientIdentificationPacket) {
-                            ClientIdentificationPacket identificationPacket = event.getPacket();
-
-                            Player player = new Player(atomicInt.getAndIncrement(),
-                                    identificationPacket.getUsername(),
-                                    event.getSession());
-                            players.add(player);
-
-                            UserType userType = operators.contains(player.getName()) ?
-                                    UserType.OPERATOR : UserType.NORMAL;
-
-                            event.getSession().send(
-                                    new ServerIdentificationPacket(getProtocolVersion(),
-                                            getName(),
-                                            getMOTD(),
-                                            userType));
-
-                            LOGGER.info(player.getName() + " has joined.");
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void serverClosing(ServerClosingEvent event) {
-                heartbeat.stopBeating();
-                heartbeat = null;
-            }
-        });
-
+        server.addListener(this);
         server.bind();
 
         this.heartbeat = new Heartbeat(this);
         new Thread(this.heartbeat, "HeartbeatThread").start();
     }
 
-    public List<Player> getPlayers() {
-        return this.players;
+    @Override
+    public void sessionAdded(SessionAddedEvent event) {
+        event.getSession().addListener(new SessionAdapter() {
+            @Override
+            public void packetReceived(PacketReceivedEvent event) {
+                if (event.getPacket() instanceof ClientIdentificationPacket) {
+                    ClientIdentificationPacket identificationPacket = event.getPacket();
+
+                    Player player = new Player(atomicInt.getAndIncrement(),
+                            identificationPacket.getUsername(),
+                            event.getSession());
+                    players.add(player);
+
+                    UserType userType = operators.contains(player.getName()) ?
+                            UserType.OPERATOR : UserType.NORMAL;
+
+                    ServerIdentificationEvent identificationEvent = new ServerIdentificationEvent(
+                            new ServerIdentificationResponse() {
+                                @Override
+                                public String getName() {
+                                    return ClassicServer.this.getName();
+                                }
+
+                                @Override
+                                public String getDescription() {
+                                    return ClassicServer.this.getMOTD();
+                                }
+
+                                @Override
+                                public int getProtocolVersion() {
+                                    return ClassicServer.this.getProtocolVersion();
+                                }
+
+                                @Override
+                                public UserType getUserType() {
+                                    return userType;
+                                }
+                            });
+                    // TODO: Fire event
+
+                    event.getSession().send(new ServerIdentificationPacket(identificationEvent.getResponse()));
+
+                    LOGGER.info(player.getName() + " has joined.");
+                }
+            }
+        });
+    }
+
+    @Override
+    public void serverClosing(ServerClosingEvent event) {
+        this.heartbeat.stopBeating();
+        this.heartbeat = null;
     }
 
     @Override
