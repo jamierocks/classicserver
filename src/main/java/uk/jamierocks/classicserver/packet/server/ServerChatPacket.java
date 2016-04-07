@@ -32,13 +32,13 @@ public class ServerChatPacket implements Packet {
 
     @Override
     public void read(NetInput netInput) throws IOException {
-        this.playerId = netInput.readInt();
+        this.playerId = netInput.readByte();
         this.message = netInput.readString();
     }
 
     @Override
     public void write(NetOutput netOutput) throws IOException {
-        netOutput.writeInt(this.playerId);
+        netOutput.writeByte(this.playerId);
         netOutput.writeString(this.message);
     }
 

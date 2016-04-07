@@ -70,7 +70,6 @@ public class ClassicServer implements uk.jamierocks.classicapi.Server {
                                             getMOTD(),
                                             userType));
 
-
                             LOGGER.info(player.getName() + " has joined.");
                         }
                     }

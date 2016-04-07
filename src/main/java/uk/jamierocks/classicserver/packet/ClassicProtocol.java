@@ -41,25 +41,25 @@ public class ClassicProtocol extends PacketProtocol {
 
     @Override
     public void newClientSession(Client client, Session session) {
-        this.registerOutgoing(0, ClientIdentificationPacket.class);
-        this.registerOutgoing(13, ClientChatPacket.class);
+        this.registerOutgoing(0x00, ClientIdentificationPacket.class);
+        this.registerOutgoing(0x0d, ClientChatPacket.class);
 
-        this.registerIncoming(0, ServerIdentificationPacket.class);
-        this.registerIncoming(1, ServerPingPacket.class);
-        this.registerIncoming(2, ServerLevelInitialisePacket.class);
-        this.registerIncoming(13, ServerChatPacket.class);
-        this.registerIncoming(15, ServerUpdateUserTypePacket.class);
+        this.registerIncoming(0x00, ServerIdentificationPacket.class);
+        this.registerIncoming(0x01, ServerPingPacket.class);
+        this.registerIncoming(0x02, ServerLevelInitialisePacket.class);
+        this.registerIncoming(0x0d, ServerChatPacket.class);
+        this.registerIncoming(0x0f, ServerUpdateUserTypePacket.class);
     }
 
     @Override
     public void newServerSession(Server server, Session session) {
-        this.registerIncoming(0, ClientIdentificationPacket.class);
-        this.registerIncoming(13, ClientChatPacket.class);
+        this.registerIncoming(0x00, ClientIdentificationPacket.class);
+        this.registerIncoming(0x0d, ClientChatPacket.class);
 
-        this.registerOutgoing(0, ServerIdentificationPacket.class);
-        this.registerOutgoing(1, ServerPingPacket.class);
-        this.registerOutgoing(2, ServerLevelInitialisePacket.class);
-        this.registerOutgoing(13, ServerChatPacket.class);
-        this.registerOutgoing(15, ServerUpdateUserTypePacket.class);
+        this.registerOutgoing(0x00, ServerIdentificationPacket.class);
+        this.registerOutgoing(0x01, ServerPingPacket.class);
+        this.registerOutgoing(0x02, ServerLevelInitialisePacket.class);
+        this.registerOutgoing(0x0d, ServerChatPacket.class);
+        this.registerOutgoing(0x0f, ServerUpdateUserTypePacket.class);
     }
 }

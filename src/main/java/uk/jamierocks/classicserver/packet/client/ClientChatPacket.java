@@ -28,13 +28,13 @@ public class ClientChatPacket implements Packet {
 
     @Override
     public void read(NetInput netInput) throws IOException {
-        this.unused = netInput.readInt();
+        this.unused = netInput.readByte();
         this.message = netInput.readString();
     }
 
     @Override
     public void write(NetOutput netOutput) throws IOException {
-        netOutput.writeInt(this.unused);
+        netOutput.writeByte(this.unused);
         netOutput.writeString(this.message);
     }
 

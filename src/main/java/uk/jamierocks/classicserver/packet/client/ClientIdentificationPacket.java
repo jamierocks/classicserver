@@ -45,18 +45,18 @@ public class ClientIdentificationPacket implements Packet {
 
     @Override
     public void read(NetInput netInput) throws IOException {
-        this.protocolVersion = netInput.readInt();
+        this.protocolVersion = netInput.readByte();
         this.username = netInput.readString();
         this.verificationKey = netInput.readString();
-        this.unused = netInput.readInt();
+        this.unused = netInput.readByte();
     }
 
     @Override
     public void write(NetOutput netOutput) throws IOException {
-        netOutput.writeInt(this.protocolVersion);
+        netOutput.writeByte(this.protocolVersion);
         netOutput.writeString(this.username);
         netOutput.writeString(this.verificationKey);
-        netOutput.writeInt(this.unused);
+        netOutput.writeByte(this.unused);
     }
 
     @Override

@@ -27,12 +27,12 @@ public class ServerUpdateUserTypePacket implements Packet {
 
     @Override
     public void read(NetInput netInput) throws IOException {
-        this.userType = UserType.fromId(netInput.readInt());
+        this.userType = UserType.fromId(netInput.readByte());
     }
 
     @Override
     public void write(NetOutput netOutput) throws IOException {
-        netOutput.writeInt(this.userType.getId());
+        netOutput.writeByte(this.userType.getId());
     }
 
     @Override

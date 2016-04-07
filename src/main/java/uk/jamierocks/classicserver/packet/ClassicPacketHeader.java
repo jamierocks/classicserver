@@ -38,11 +38,11 @@ public class ClassicPacketHeader implements PacketHeader {
 
     @Override
     public int readPacketId(NetInput netInput) throws IOException {
-        return netInput.readInt();
+        return netInput.readByte();
     }
 
     @Override
     public void writePacketId(NetOutput netOutput, int i) throws IOException {
-        netOutput.writeInt(i);
+        netOutput.writeByte(i);
     }
 }

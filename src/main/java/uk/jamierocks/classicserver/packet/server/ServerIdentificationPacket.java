@@ -45,18 +45,18 @@ public class ServerIdentificationPacket implements Packet {
 
     @Override
     public void read(NetInput netInput) throws IOException {
-        this.protocolVersion = netInput.readInt();
+        this.protocolVersion = netInput.readByte();
         this.serverName = netInput.readString();
         this.serverMOTD = netInput.readString();
-        this.userType = UserType.fromId(netInput.readInt());
+        this.userType = UserType.fromId(netInput.readByte());
     }
 
     @Override
     public void write(NetOutput netOutput) throws IOException {
-        netOutput.writeInt(this.protocolVersion);
+        netOutput.writeByte(this.protocolVersion);
         netOutput.writeString(this.serverName);
         netOutput.writeString(this.serverMOTD);
-        netOutput.writeInt(this.userType.getId());
+        netOutput.writeByte(this.userType.getId());
     }
 
     @Override
